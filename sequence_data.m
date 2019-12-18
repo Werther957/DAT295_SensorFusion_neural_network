@@ -72,8 +72,12 @@ for j = 1:n_motions
 %         axis([-1 1 -1 1 -1 1])
     end
     
-    phi_meas{j} = phi{j} .* scale_gyro + bias_gyro;
-    a_meas{j}   = a{j}   .* scale_acc  + bias_acc;
+    phi_sigma = deg2rad(0.01); %assume the gyro noise N(0,sigma)
+    a_sigma = 1/1000*9.8;
+    %phi_meas{j} = phi{j} .* scale_gyro + bias_gyro;
+    %a_meas{j}   = a{j}   .* scale_acc  + bias_acc;
+    phi_meas{j} = (phi{j} + normrnd(0,phi_sigma,3,n_samples+1)).* scale_gyro + bias_gyro;
+    a_meas{j}   = (a{j}  + normrnd(0,phi_sigma,3,n_samples+1)).* scale_acc + bias_acc;
     hrs_rad_list{j} = hrs_rad;
     
 %         plot3(a{j}(1,:),a{j}(2,:),a{j}(3,:),'b.')
